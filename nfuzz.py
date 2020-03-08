@@ -163,7 +163,7 @@ def main():
         from third.colorama import win32
     parser = argparse.ArgumentParser()
     flag_parser = parser.add_mutually_exclusive_group(required=False)
-    flag_parser.add_argument('-I',dest='show',action='store_true')
+    flag_parser.add_argument('-I',dest='show',action='store_true',help="CURL -I mode")
     parser.add_argument('-t',dest='thread_num',type=int,help="thread options",default=10)
     parser.add_argument('-u',dest='urls',type=str,help="url options")
     parser.add_argument('-w',dest='wordlists',type=str,help="wordlists options")
@@ -193,7 +193,7 @@ def main():
         -t Please enter the THREAD number
         -u Please enter the URL number
         -I CURL -I mode
-        -d Post data FUZZ
+        -d Post data FUZZ need "FUZZ" word in data , data usage:"username=admin&password=FUZZ"
         -X http-method support Post and Get (default)
         '''
         print(txt)
