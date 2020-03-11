@@ -11,10 +11,14 @@ windows 下也具备颜色输出 ，本工具尽量用 python3 编译，python2 
 用法：
 ```
 web目录扫描:
-python3 nfuzz.py -w /usr/share/wordlists/wfuzz/general/common.txt -u xxxxxxxxxxxx.com -t 5
+python3 nfuzz.py -w /usr/share/wordlists/wfuzz/general/common.txt -u http://192.168.1.1/FUZZ -t 5
+其他例子：
+usage:"http://192.168.1.1/FUZZ" or "http://192.168.1.1/FUZZ/n00b.py" or "http://FUZZ/n00b"
+
 
 post爆破（ FUZZ 占 位 符 和 -d 是 必 须 的 ，传 递 的 参 数 格 式 也 要 合 规 ）:
 python3 nfuzz.py -w password.txt -u xxxxxxxx.com -d "username=admin&password=FUZZ"
+usage:"username=admin&password=FUZZ"
 
 curl -I（个人用的比较多，所以添上了）:
 python3 nfuzz.py -u xxxxxxxxxxxxx.com -I
@@ -36,8 +40,8 @@ usage: nfuzz.py [-h] [-I] [-t THREAD_NUM] [-u URLS] [-w WORDLISTS]
 optional arguments:
         -w Please enter the WORDLIST file address
         -t Please enter the THREAD number
-        -u Please enter the URL number
+        -u Please enter the URL , need "FUZZ"
         -I CURL -I mode
-        -d Post data FUZZ need "FUZZ" word in data , data,usage:"username=admin&password=FUZZ"
+        -d Post data , need "FUZZ"
         -X http-method support Post and Get (default)                   
 ```
