@@ -1,6 +1,7 @@
 #! /usr/bin/python3
+# -*- coding: utf-8 -*
 
-import threading , sys , os , gc , time , argparse , json , re , itertools
+import threading , sys , os , gc , argparse , re
 import third.requests as requests
 import third.colorama as colorama
 from queue import Queue
@@ -18,69 +19,15 @@ banner ='''
 author : n00B@khan
 '''
 
-global IS_EXIT
+# global IS_EXIT
 headers = {
     'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE'
 }
 
+
+
 colorama.init(autoreset=True)
 
-#webscan
-class DirScan:
-    def __init__(self , args):
-        self.urls = args.urls
-        self.thread_num = args.thread_num
-        self.wordlists = args.wordlists
-        self.method = args.method
-
-    def start(self,timeout = None):
-        queue = Queue()
-        f = open(self.wordlists,'r')
-        for i in f.readlines():
-            queue.put(self.urls + '/' + i.strip('\n'))
-        total = queue.qsize()
-        threads = []
-        thread_count = int(self.thread_num)
-        for i in range(thread_count):
-            threads.append(self.request(queue,total))
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join(timeout)
-
-    class request(threading.Thread):
-        def __init__(self, queue , total):
-            threading.Thread.__init__(self)
-            self._queue = queue
-            self._total = total
-
-            
-        def run(self):
-            gc.collect()
-            while not self._queue.empty():
-                urls = self._queue.get()
-                resp = requests.get(urls , headers = headers)
-                try:
-                    if resp.status_code == 200 :
-                        sys.stdout.write('\r'+colorama.Fore.GREEN + '[+]\t200\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 403 :
-                        sys.stdout.write('\r'+colorama.Fore.CYAN  + '[!]\t403\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 302 :
-                        sys.stdout.write('\r'+colorama.Fore.BLUE  + '[+]\t302\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 301 :
-                        sys.stdout.write('\r'+colorama.Fore.BLUE  + '[+]\t301\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 405 :
-                        sys.stdout.write('\r'+colorama.Fore.CYAN  + '[!]\t405\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 400 :
-                        sys.stdout.write('\r'+colorama.Fore.CYAN  + '[-]\t400\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 500 :
-                        sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t500\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 404 :
-                        sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                except EOFError as e:
-                    sys.exit(1)
-
-#post form brute
 class Brute:
     def __init__(self , args):
         self.urls = args.urls
@@ -89,54 +36,65 @@ class Brute:
         self.method = args.method
         self.thread_num = args.thread_num
         self.queue = Queue()
-        f = open(self.wordlists,'r')
-        for i in f.readlines():
-            self.queue.put(re.sub(r"FUZZ",i,args.data))
+        
 
     def to_do(self):
-        if self.method == "Post" and self.data == None:
+        f = open(self.wordlists,'r')
+        if self.data != None and "FUZZ" in self.data:
+            sys.stdout.write('\r'+colorama.Fore.GREEN + '   \tResponse\tChars\t\datas'+'\r'+'\r')
+            for i in f.readlines():
+                self.queue.put(re.sub(r"FUZZ", i.strip() ,self.data))
+            thread_count = int(self.thread_num)
+            for i in range(thread_count):
+                t = threading.Thread(target= self.fuzz2)
+                t.start()
+                t.join()
+        elif self.urls and self.wordlists and "FUZZ" in self.urls:
+            sys.stdout.write('\r'+colorama.Fore.GREEN + '   \tResponse\tChars\t\turls'+'\r'+'\r')
+            for i in f.readlines():
+                self.queue.put(re.sub(r"FUZZ",i.strip(),self.urls))
             thread_count = int(self.thread_num)
             for i in range(thread_count):
                 t = threading.Thread(target=self.fuzz)
                 t.start()
                 t.join()
-        if self.data != None:
-            thread_count = int(self.thread_num)
-            for i in range(thread_count):
-                t = threading.Thread(target= self.fuzz)
-                t.start()
-                t.join()
-
-    def PostWebScan(self):
-        gc.collect()
-        while not self.queue.empty():
-                urls = self.queue.get()
-                resp = requests.post(urls , headers = headers)
-                try:
-                    if resp.status_code == 200 :
-                        sys.stdout.write('\r'+colorama.Fore.GREEN + '[+]\t200\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 403 :
-                        sys.stdout.write('\r'+colorama.Fore.CYAN  + '[!]\t403\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 302 :
-                        sys.stdout.write('\r'+colorama.Fore.BLUE  + '[+]\t302\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 301 :
-                        sys.stdout.write('\r'+colorama.Fore.BLUE  + '[+]\t301\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 405 :
-                        sys.stdout.write('\r'+colorama.Fore.CYAN  + '[!]\t405\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 400 :
-                        sys.stdout.write('\r'+colorama.Fore.CYAN  + '[-]\t400\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 500 :
-                        sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t500\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                    elif resp.status_code == 404 :
-                        sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t{}\t\t{}\n'.format(resp.headers['content-length'],urls))
-                except EOFError as e:
-                    sys.exit(1)
 
     def fuzz(self):
         gc.collect()
         while not self.queue.empty():
+            if self.method.strip() == "post":
+                urls = self.queue.get()
+                resp = requests.post(urls,headers = headers,verify=False)
+            elif self.method.strip() == "get":
+                urls = self.queue.get()
+                resp = requests.get(urls,headers = headers,verify=False)
+            try:
+                if resp.status_code == 200 :
+                    sys.stdout.write('\r'+colorama.Fore.GREEN + '[+]\t200\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 403 :
+                    sys.stdout.write('\r'+colorama.Fore.CYAN  + '[!]\t403\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 302 :
+                    sys.stdout.write('\r'+colorama.Fore.BLUE  + '[+]\t302\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 301 :
+                    sys.stdout.write('\r'+colorama.Fore.BLUE  + '[+]\t301\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 405 :
+                    sys.stdout.write('\r'+colorama.Fore.CYAN  + '[!]\t405\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 400 :
+                    sys.stdout.write('\r'+colorama.Fore.CYAN  + '[-]\t400\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 500 :
+                    sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t500\t\t\t{}\n'.format(urls))
+                elif resp.status_code == 404 :
+                    sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t\t\t{}\n'.format(urls))
+            except Exception as e:
+                print(e)
+                pass
+                # sys.exit(1)
+
+    def fuzz2(self):
+        gc.collect()
+        while not self.queue.empty():
             datas = self.queue.get()
-            resp = requests.post(self.urls , headers = headers , data= datas)
+            resp = requests.post(self.urls , headers = headers , data= datas ,verify=False)
             try:
                 if resp.status_code == 200 :
                     sys.stdout.write('\r'+colorama.Fore.GREEN + '[+]\t200\t{}\t\t{}\n'.format(resp.headers['content-length'],datas))
@@ -154,11 +112,16 @@ class Brute:
                     sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t500\t{}\t\t{}\n'.format(resp.headers['content-length'],datas))
                 elif resp.status_code == 404 :
                     sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t{}\t\t{}\n'.format(resp.headers['content-length'],datas))
-            except EOFError as e:
+            except Exception as e:
+                print("error")
+                self.queue.put(datas)
+                threading.Thread(target=self.fuzz2)
                 sys.exit(1)
 
 def main():
     print(colorama.Fore.GREEN+ banner)
+    if sys.version_info < (3,0):
+        sys.stdout.write('nfuzz requires Python 3.x')
     if platform.system == "windows":
         from third.colorama import win32
     parser = argparse.ArgumentParser()
@@ -171,7 +134,7 @@ def main():
     parser.add_argument('-d',dest='data',type=str,help="post data")
     args = parser.parse_args()
     if args.show and args.urls:
-        resp = requests.get(args.urls)
+        resp = requests.get(args.urls,verify = False)
         print(resp.status_code)
         print(resp.headers)
         sys.exit(1)
@@ -181,12 +144,15 @@ def main():
             brute.to_do()
             sys.exit(1)
         else:
-            print("u need FUZZ word =。= ")
+            print(colorama.Fore.RED+"u need FUZZ word =。= ")
             sys.exit(1)
     elif args.urls and args.wordlists:
-        dirscan = DirScan(args)
-        dirscan.start()
-        sys.exit(1)
+        if "FUZZ" in args.urls:
+            brute = Brute(args)
+            brute.to_do()
+            sys.exit(1)
+        else:
+            print(colorama.Fore.RED+"u need FUZZ word =。= ")
     else:
         txt = '''
         -w Please enter the WORDLIST file address
