@@ -3,8 +3,12 @@
 ***
   
 author : n00B@khan  
-nfuzz.py 是个具备 / web目录扫描器 / post fuzz爆破 / curl -I / 功能的脚本    
-windows 下也具备颜色输出 ，本工具尽量用 python3 编译，python2 可能会报错
+nfuzz.py 是个具备 / web目录扫描器 / web post form 爆破 / curl -I / 功能的脚本    
+****
+
+##2020-3-11更新，修复报错，目录扫描模块修改（现 在 目 录 扫 描 也 需 要 "FUZZ" 占位符）
+****
+windows 下也具备颜色输出 ，本工具依赖与 python3  
 
 缺点：windows 下没有ctrl-c 终止程序
 
