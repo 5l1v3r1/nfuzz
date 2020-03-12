@@ -13,7 +13,7 @@ windows 下也具备颜色输出 ，本工具依赖于 python3
 缺点：windows 下没有ctrl-c 终止程序  
 
 项目地址：  
-[khan 官网](http://www.khan.org.cn/index.php/2020/03/12/nfuzz/)
+[khan 官网](http://www.khan.org.cn/index.php/2020/03/12/nfuzz/)  
 [n00B-tot / nfuzz](https://github.com/n00B-ToT/nfuzz)
 
 用法：
