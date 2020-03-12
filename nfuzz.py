@@ -6,7 +6,7 @@ import third.requests as requests
 import third.colorama as colorama
 from queue import Queue
 import platform 
-import pdb
+#import pdb
 
 
 banner ='''
@@ -83,8 +83,6 @@ class Brute:
                     sys.stdout.write('\r'+colorama.Fore.CYAN  + '[-]\t400\t\t\t{}\n'.format(urls))
                 elif resp.status_code == 500 :
                     sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t500\t\t\t{}\n'.format(urls))
-                elif resp.status_code == 404 :
-                    sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t\t\t{}\n'.format(urls))
             except Exception as e:
                 print(e)
                 pass
@@ -110,8 +108,6 @@ class Brute:
                     sys.stdout.write('\r'+colorama.Fore.CYAN  + '[-]\t400\t{}\t\t{}\n'.format(resp.headers['content-length'],datas))
                 elif resp.status_code == 500 :
                     sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t500\t{}\t\t{}\n'.format(resp.headers['content-length'],datas))
-                elif resp.status_code == 404 :
-                    sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t{}\t\t{}\n'.format(resp.headers['content-length'],datas))
             except Exception as e:
                 print("error")
                 self.queue.put(datas)
