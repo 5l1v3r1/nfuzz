@@ -8,9 +8,13 @@ nfuzz.py 是个具备 / web目录扫描器 / web post form 爆破 / curl -I / �
 
 ### 2020-3-11更新，修复报错，目录扫描模块修改（现 在 目 录 扫 描 也 需 要 "FUZZ" 占位符）
 ****
-windows 下也具备颜色输出 ，本工具依赖与 python3  
+windows 下也具备颜色输出 ，本工具依赖于 python3  
 
-缺点：windows 下没有ctrl-c 终止程序
+缺点：windows 下没有ctrl-c 终止程序  
+
+项目地址：  
+[khan 官网](http://www.khan.org.cn/index.php/2020/03/12/nfuzz/)
+[n00B-tot / nfuzz](https://github.com/n00B-ToT/nfuzz)
 
 用法：
 ```
