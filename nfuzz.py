@@ -19,7 +19,7 @@ banner ='''
 author : n00B@khan
 '''
 
-IS_EXIT = False
+# IS_EXIT = False
 headers = {
     'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE'
 }
@@ -61,9 +61,9 @@ class Brute:
                 t.join()
 
     def fuzz(self):
-        global IS_EXIT
+        # global IS_EXIT
         gc.collect()
-        while not self.queue.empty() and IS_EXIT == False:
+        while not self.queue.empty():
             if self.method.strip() == "post":
                 urls = self.queue.get()
                 resp = requests.post(urls,headers = headers,verify=False)
@@ -95,8 +95,6 @@ class Brute:
                 elif resp.status_code == 404:
                     if self.filter == None or 404 not in self.filter :
                         sys.stdout.write('\r'+colorama.Fore.RED   + '[-]\t404\t\t\t{}\n'.format(urls))
-                    else:
-                        pass
             except Exception as e:
                 print("error")
                 sys.exit(1)
@@ -193,9 +191,10 @@ def main():
         -t Please enter the THREAD number
         -u Please enter the URL number , usage:"http://www.baidu.com/FUZZ/error.html"
         -I CURL -I mode
-        -C CURL mode
+        -C CURL mode 
         -d Post data  , usage:"username=admin&password=FUZZ"
         -X http-method support Post and Get (default)
+        --hc http_status_code filter , usage:"--hc 404 500"
         '''
         print(txt)
         sys.exit(1)

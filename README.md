@@ -8,9 +8,13 @@ nfuzz.py 是个具备 / web目录扫描器 / web post form 爆破 / curl -I / �
 
 ### 2020-3-11更新，修复报错，目录扫描模块修改（现 在 目 录 扫 描 也 需 要 "FUZZ" 占位符）
 ****
-windows 下也具备颜色输出 ，本工具依赖与 python3  
+windows 下也具备颜色输出 ，本工具依赖于 python3  
 
-缺点：windows 下没有ctrl-c 终止程序
+缺点：windows 下没有ctrl-c 终止程序  
+
+项目地址：  
+[khan 官网](http://www.khan.org.cn/index.php/2020/03/12/nfuzz/)  
+[n00B-tot / nfuzz](https://github.com/n00B-ToT/nfuzz)
 
 用法：
 ```
@@ -38,14 +42,16 @@ python3 nfuzz.py -h
                                    
 author : n00B@khan
 
-usage: nfuzz.py [-h] [-I] [-t THREAD_NUM] [-u URLS] [-w WORDLISTS]
-                [-X {get,post}] [-d DATA] 
+usage: nfuzz.py [-h] [-I | -C] [-t THREAD_NUM] [-u URLS] [-w WORDLISTS]
+                [-X {get,post}] [-d DATA] [--hc [FILTER [FILTER ...]]]  
 
 optional arguments:
         -w Please enter the WORDLIST file address
         -t Please enter the THREAD number
-        -u Please enter the URL , need "FUZZ"
+        -u Please enter the URL number , usage:"http://www.baidu.com/FUZZ/error.html"
         -I CURL -I mode
-        -d Post data , need "FUZZ"
-        -X http-method support Post and Get (default)                   
+        -C CURL mode 
+        -d Post data  , usage:"username=admin&password=FUZZ"
+        -X http-method support Post and Get (default) 
+        --hc http_status_code filter , usage:"--hc 404 500"                
 ```
