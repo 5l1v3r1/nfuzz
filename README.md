@@ -6,7 +6,7 @@ author : n00B@khan
 nfuzz.py 是个具备 / web目录扫描器 / web post form 爆破 / curl -I / 功能的脚本    
 ****
 
-### 2020-3-11更新，修复报错，目录扫描模块修改（现 在 目 录 扫 描 也 需 要 "FUZZ" 占位符）
+### 不打算更新了，dirsearch还是有点香的 =. =
 ****
 windows 下也具备颜色输出 ，本工具依赖于 python3  
 
