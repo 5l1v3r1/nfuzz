@@ -6,7 +6,9 @@ author : n00B@khan
 nfuzz.py 是个具备 / web目录扫描器 / web post form 爆破 / curl -I / 功能的脚本    
 ****
 
-### 不打算更新了，dirsearch还是有点香的 =. =
+### proxypool 代理池配合 nfuzz （妈妈再也不怕我被封ip辣 ^ ^） [nfuzz_proxypool](https://github.com/n00B-ToT/nfuzz/releases/tag/nfuzz_with_proxypool_v0.01)  
+__*代理池需要自己配置*__
+  
 ****
 windows 下也具备颜色输出 ，本工具依赖于 python3  
 
